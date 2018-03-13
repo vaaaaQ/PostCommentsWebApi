@@ -2,14 +2,12 @@
 {
     public class Content
     {
-        public string Text { get; }
+        public string Text { get; set; }
 
-        public string Image { get; }
 
-        public Content(string text, string image = default)
+        public Content(string text)
         {
             Text = text;
-            Image = image;
         }
     }
 }

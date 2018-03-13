@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using PostComments.Core.Entities.Post;
@@ -13,9 +12,9 @@ namespace UnitTests.PostComments.Core.Services
 {
     public class PostServiceTest
     {
-        private const string postText = "Text";
-        private const string postTitle = "Title";
-        private Mock<IAsyncRepository<Post>> _mockPostRepository;
+        private const string PostText = "Text";
+        private const string PostTitle = "Title";
+        private readonly Mock<IAsyncRepository<Post>> _mockPostRepository;
 
         public PostServiceTest()
         {
@@ -27,10 +26,8 @@ namespace UnitTests.PostComments.Core.Services
         {
             var postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDTO createPostDto = null;
-
             //DTO is null
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostDto, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(null, Guid.Empty));
         }
 
         [Fact]
@@ -38,7 +35,7 @@ namespace UnitTests.PostComments.Core.Services
         {
             var postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDTO createPostDto = new CreatePostDTO();
+            CreatePostDto createPostDto = new CreatePostDto();
 
             //Text is invalid
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostDto, Guid.Empty));
@@ -49,9 +46,9 @@ namespace UnitTests.PostComments.Core.Services
         {
             var postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDTO createPostDto = new CreatePostDTO
+            CreatePostDto createPostDto = new CreatePostDto
             {
-                Text = postText,
+                Text = PostText,
                 Title = null
             };
 
@@ -64,10 +61,10 @@ namespace UnitTests.PostComments.Core.Services
         {
             var postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDTO createPostDto = new CreatePostDTO
+            CreatePostDto createPostDto = new CreatePostDto
             {
-                Text = postText,
-                Title = postTitle
+                Text = PostText,
+                Title = PostTitle
             };
 
             //From is invalid
@@ -82,10 +79,10 @@ namespace UnitTests.PostComments.Core.Services
 
             var fromId = Guid.NewGuid();
 
-            CreatePostDTO createPostDto = new CreatePostDTO
+            CreatePostDto createPostDto = new CreatePostDto
             {
-                Text = postText,
-                Title = postTitle
+                Text = PostText,
+                Title = PostTitle
             };
 
             Post post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Title), fromId);
@@ -109,7 +106,7 @@ namespace UnitTests.PostComments.Core.Services
 
             var posts = new List<Post>
             {
-                new Post(new Content(postText), new Title(postTitle), Guid.NewGuid())
+                new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid())
             };
 
             _mockPostRepository.Setup(repo => repo.ListAllAsync()).ReturnsAsync(posts);
@@ -120,7 +117,6 @@ namespace UnitTests.PostComments.Core.Services
             var post = posts.Single();
 
             Assert.Equal(returnedPost.Content.Text, post.Content.Text);
-            Assert.Equal(returnedPost.Content.Image, post.Content.Image);
             Assert.Equal(returnedPost.FromId, post.FromId);
             Assert.Equal(returnedPost.Id, post.Id);
             Assert.Equal(returnedPost.CreatedOn, post.CreatedOn);
@@ -134,9 +130,9 @@ namespace UnitTests.PostComments.Core.Services
 
             var posts = new List<Post>
             {
-                new Post(new Content(postText), new Title(postTitle), Guid.NewGuid()),
-                new Post(new Content(postText), new Title(postTitle), Guid.NewGuid()),
-                new Post(new Content(postText), new Title(postTitle), Guid.NewGuid())
+                new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid()),
+                new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid()),
+                new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid())
             };
 
             _mockPostRepository.Setup(repo => repo.ListAllAsync()).ReturnsAsync(posts);
@@ -153,7 +149,7 @@ namespace UnitTests.PostComments.Core.Services
         {
             var postService = new PostService(_mockPostRepository.Object);
 
-            var post = new Post(new Content(postText), new Title(postTitle), Guid.NewGuid());
+            var post = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.Is<Guid>(id => id == post.Id))).ReturnsAsync(post);
 
@@ -161,7 +157,6 @@ namespace UnitTests.PostComments.Core.Services
 
             Assert.NotNull(returnedPost);
             Assert.Equal(returnedPost.Content.Text, post.Content.Text);
-            Assert.Equal(returnedPost.Content.Image, post.Content.Image);
             Assert.Equal(returnedPost.FromId, post.FromId);
             Assert.Equal(returnedPost.Id, post.Id);
             Assert.Equal(returnedPost.CreatedOn, post.CreatedOn);
@@ -174,6 +169,83 @@ namespace UnitTests.PostComments.Core.Services
             var postService = new PostService(_mockPostRepository.Object);
 
             await Assert.ThrowsAsync<ArgumentException>(async () => await postService.GetPostByIdAsync(Guid.Empty));
+        }
+
+        [Fact]
+        public async void Get_Post_By_Id_Throws_Post_Not_Exists()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            var existingPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
+
+            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.Is<Guid>(id => id == existingPost.Id))).ReturnsAsync(existingPost);
+            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.Is<Guid>(id => id != existingPost.Id))).ReturnsAsync(() => null);
+
+            await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.GetPostByIdAsync(Guid.NewGuid()));
+        }
+
+        [Fact]
+        public async void Update_Post_By_Id_Throws_Given_Empty_id()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await postService.UpdatePostAsync(Guid.Empty, null));
+        }
+
+        [Fact]
+        public async void Update_Post_By_Id_Throws_Given_Null_dto()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.UpdatePostAsync(initialPost.Id, null));
+        }
+
+        [Fact]
+        public async void Update_Post_By_Id_Throws_Given_Dto_Values_Are_Empty()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
+
+            UpdatePostDto dto = new UpdatePostDto
+            {
+                Text = "",
+                Title = null
+            };
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.UpdatePostAsync(initialPost.Id, dto));
+        }
+
+        [Fact]
+        public async void Update_Post_By_Id_Throws_Post_Doesnot_Exist()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
+
+            UpdatePostDto dto = new UpdatePostDto
+            {
+                Text = "New Text",
+                Title = "New Title"
+            };
+
+            Post post = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
+
+            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.Is<Guid>(id => id == post.Id))).ReturnsAsync(post);
+            _mockPostRepository.Setup(repo => repo.UpdateAsync(post)).Returns(Task.CompletedTask);
+
+
+            await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.UpdatePostAsync(initialPost.Id, dto));
+        }
+
+        [Fact]
+        public async void Delete_Post_By_Id_Throws_Post_Doesnot_Exist()
+        {
+            var postService = new PostService(_mockPostRepository.Object);
+
+            await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.DeletePostByIdAsync(Guid.NewGuid()));
         }
     }
 }

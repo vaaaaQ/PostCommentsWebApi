@@ -2,7 +2,7 @@
 {
     public class Title
     {
-        public string Text { get; }
+        public string Text { get; set; }
 
         public Title(string text)
         {
