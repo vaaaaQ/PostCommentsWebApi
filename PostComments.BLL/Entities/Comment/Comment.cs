@@ -10,10 +10,11 @@ namespace PostComments.Core.Entities.Comment
 
         public Content Content { get; private set; }
 
-        public Comment(Guid fromId, Content content)
+        public Comment(Guid fromId, Guid postId,  Content content)
         {
             FromId = fromId;
             Content = content;
+            PostId = postId;
         }
 
         protected Comment(){}

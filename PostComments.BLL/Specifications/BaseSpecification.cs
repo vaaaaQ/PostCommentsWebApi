@@ -5,7 +5,7 @@ using PostComments.Core.Interfaces;
 
 namespace PostComments.Core.Specifications
 {
-    public abstract class BaseSpecification<T> : ISpecification<T>
+    public class BaseSpecification<T> : ISpecification<T>
     {
         public BaseSpecification(Expression<Func<T, bool>> criteria)
         {

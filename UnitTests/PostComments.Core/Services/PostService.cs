@@ -87,8 +87,9 @@ namespace UnitTests.PostComments.Core.Services
 
             Post post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Title), fromId);
 
-            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId == post.FromId))).ReturnsAsync(() => post);
-            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId != post.FromId))).ReturnsAsync(() => null);
+            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId == post.FromId))).Returns(Task.CompletedTask);
+            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId != post.FromId)));//.ReturnsAsync(() => null);
+            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);//.ReturnsAsync(() => null);
 
 
             var returnedPost = await postService.CreatePostAsync(createPostDto, fromId);

@@ -15,7 +15,6 @@ namespace PostComments.Core.Services
     {
         private readonly IAsyncRepository<Post> _postRepository;
 
-
         public PostService(IAsyncRepository<Post> postRepository)
         {
             _postRepository = postRepository;
@@ -29,7 +28,8 @@ namespace PostComments.Core.Services
             Guard.Against.GuidEmpty(from, nameof(from));
 
             var post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Text), from);
-            return await _postRepository.AddAsync(post);
+            await _postRepository.AddAsync(post);
+            return await _postRepository.GetByIdAsync(post.Id);
         }
 
         public async Task<IEnumerable<Post>> GetPostsAsync()
@@ -40,9 +40,10 @@ namespace PostComments.Core.Services
         public async Task<Post> GetPostByIdAsync(Guid id)
         {
             Guard.Against.GuidEmpty(id, nameof(id));
+
             var post = await _postRepository.GetByIdAsync(id);
-            if (post is null)
-                throw new PostNotExistsException(id);
+            Guard.Against.PostNotExists(post, id);
+
             return post;
         }
 
@@ -56,8 +57,7 @@ namespace PostComments.Core.Services
 
             var post = await _postRepository.GetByIdAsync(initialPostId);
 
-            if (post is null)
-                throw new PostNotExistsException(initialPostId);
+            Guard.Against.PostNotExists(post, initialPostId);
 
             post.Content.Text = dto.Text;
             post.Title.Text = dto.Title;
@@ -70,6 +70,8 @@ namespace PostComments.Core.Services
             Guard.Against.GuidEmpty(id, nameof(id));
 
             var post = await _postRepository.GetByIdAsync(id);
+
+            Guard.Against.PostNotExists(post, id);
 
             if (post is null)
                 throw new PostNotExistsException(id);
