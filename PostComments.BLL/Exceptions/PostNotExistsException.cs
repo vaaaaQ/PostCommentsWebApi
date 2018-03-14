@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace PostComments.Core.Exceptions
 {
     [Serializable]
-    public class PostNotExistsException : ArgumentNullException
+    public class PostNotExistsException : BaseNotExistsException
     {
         public PostNotExistsException(Guid id) : this($"Post with id: {id} doesn't exist")
         {

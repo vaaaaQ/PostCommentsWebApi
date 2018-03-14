@@ -2,7 +2,7 @@
 
 namespace PostComments.Core.Exceptions
 {
-    public class CommentNotExistsException : ArgumentNullException
+    public class CommentNotExistsException : BaseNotExistsException
     {
         public CommentNotExistsException(Guid commentId) : this($"Comment with id: {commentId} doesn't exist")
         {
