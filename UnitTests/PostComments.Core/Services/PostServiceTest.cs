@@ -24,7 +24,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Throws_Given_PostDto_isNull()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             //DTO is null
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(null, Guid.Empty));
@@ -33,7 +33,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Throws_Given_PostDto_text_isInvalid()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             CreatePostDto createPostDto = new CreatePostDto();
 
@@ -44,7 +44,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Throws_Given_PostDto_title_isInvalid()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             CreatePostDto createPostDto = new CreatePostDto
             {
@@ -59,7 +59,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Throws_Given_PostDto_from_isInvalid()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             CreatePostDto createPostDto = new CreatePostDto
             {
@@ -74,7 +74,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Create_New_Post_Success()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
 
             var fromId = Guid.NewGuid();
@@ -103,7 +103,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Get_All_Posts_Should_Returns_One_Row()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var posts = new List<Post>
             {
@@ -127,7 +127,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Get_All_Posts_Should_Returns_More_Then_One_Row()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var posts = new List<Post>
             {
@@ -148,7 +148,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Get_Post_By_Id_Should_Returns_OneRow()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var post = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
@@ -167,7 +167,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Get_Post_By_Id_Throws_Given_Empty_id()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             await Assert.ThrowsAsync<ArgumentException>(async () => await postService.GetPostByIdAsync(Guid.Empty));
         }
@@ -175,7 +175,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Get_Post_By_Id_Throws_Post_Not_Exists()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var existingPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
@@ -188,7 +188,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Update_Post_By_Id_Throws_Given_Empty_id()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             await Assert.ThrowsAsync<ArgumentException>(async () => await postService.UpdatePostAsync(Guid.Empty, null));
         }
@@ -196,7 +196,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Update_Post_By_Id_Throws_Given_Null_dto()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
@@ -206,7 +206,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Update_Post_By_Id_Throws_Given_Dto_Values_Are_Empty()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
@@ -222,7 +222,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Update_Post_By_Id_Throws_Post_Doesnot_Exist()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
@@ -244,7 +244,7 @@ namespace UnitTests.PostComments.Core.Services
         [Fact]
         public async void Delete_Post_By_Id_Throws_Post_Doesnot_Exist()
         {
-            var postService = new PostService(_mockPostRepository.Object);
+            IPostService postService = new PostService(_mockPostRepository.Object);
 
             await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.DeletePostByIdAsync(Guid.NewGuid()));
         }

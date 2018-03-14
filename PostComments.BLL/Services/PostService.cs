@@ -11,7 +11,7 @@ using PostComments.Core.Interfaces;
 
 namespace PostComments.Core.Services
 {
-    public class PostService
+    public class PostService : IPostService
     {
         private readonly IAsyncRepository<Post> _postRepository;
 
