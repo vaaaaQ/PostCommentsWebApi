@@ -1,4 +1,4 @@
-﻿namespace PostComments.Core.Entities.Post
+﻿namespace PostComments.BLL.Entities.Post
 {
     public class Title
     {

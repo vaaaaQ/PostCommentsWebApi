@@ -1,7 +1,7 @@
 ﻿using System;
-using PostComments.Core.Entities.Post;
+using PostComments.BLL.Entities.Post;
 
-namespace PostComments.Core.Entities.Comment
+namespace PostComments.BLL.Entities.Comment
 {
     public class Comment : BaseEntity
     {

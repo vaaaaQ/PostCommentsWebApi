@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PostComments.Core.Entities
+namespace PostComments.BLL.Entities
 {
     public class BaseEntity
     {

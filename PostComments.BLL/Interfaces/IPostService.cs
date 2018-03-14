@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Post;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Post;
 
 namespace PostComments.Core.Interfaces
 {

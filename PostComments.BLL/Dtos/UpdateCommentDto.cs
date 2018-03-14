@@ -1,4 +1,4 @@
-﻿namespace PostComments.Core.Dtos
+﻿namespace PostComments.BLL.Dtos
 {
     public class UpdateCommentDto
     {

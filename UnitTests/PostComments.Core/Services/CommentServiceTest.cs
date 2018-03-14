@@ -5,13 +5,12 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Comment;
-using PostComments.Core.Entities.Post;
-using PostComments.Core.Exceptions;
-using PostComments.Core.Interfaces;
-using PostComments.Core.Services;
-using PostComments.Core.Specifications;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Comment;
+using PostComments.BLL.Entities.Post;
+using PostComments.BLL.Exceptions;
+using PostComments.BLL.Interfaces;
+using PostComments.BLL.Services;
 using Xunit;
 
 namespace UnitTests.PostComments.Core.Services

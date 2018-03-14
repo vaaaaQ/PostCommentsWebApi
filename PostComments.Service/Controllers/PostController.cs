@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Post;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Post;
 using PostComments.Core.Interfaces;
 
 namespace PostComments.Service.Controllers

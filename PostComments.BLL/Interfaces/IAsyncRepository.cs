@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PostComments.Core.Entities;
+using PostComments.BLL.Entities;
+using PostComments.BLL.Interfaces;
 
-namespace PostComments.Core.Interfaces
+namespace PostComments.BLL.Interfaces
 {
     public interface IAsyncRepository<T> where T : BaseEntity
     {

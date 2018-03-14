@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PostComments.Core.Exceptions
+namespace PostComments.BLL.Exceptions
 {
     public class CommentNotExistsException : BaseNotExistsException
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PostComments.Core.Exceptions
+namespace PostComments.BLL.Exceptions
 {
     [Serializable]
     public class PostNotExistsException : BaseNotExistsException

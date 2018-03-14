@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace PostComments.Core.Interfaces
+namespace PostComments.BLL.Interfaces
 {
     public interface ISpecification<T>
     {

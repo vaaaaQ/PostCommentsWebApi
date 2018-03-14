@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
-using PostComments.Core;
-using PostComments.Core.Exceptions;
+using PostComments.BLL;
+using PostComments.BLL.Exceptions;
 
 namespace PostComments.Service.Filters
 {

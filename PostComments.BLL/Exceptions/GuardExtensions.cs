@@ -1,9 +1,9 @@
 ﻿using System;
 using Ardalis.GuardClauses;
-using PostComments.Core.Entities.Comment;
-using PostComments.Core.Entities.Post;
+using PostComments.BLL.Entities.Comment;
+using PostComments.BLL.Entities.Post;
 
-namespace PostComments.Core.Exceptions
+namespace PostComments.BLL.Exceptions
 {
     public static class GuardExtensions
     {

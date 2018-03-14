@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Comment;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Comment;
 
-namespace PostComments.Core.Interfaces
+namespace PostComments.BLL.Interfaces
 {
     public interface ICommentService
     {

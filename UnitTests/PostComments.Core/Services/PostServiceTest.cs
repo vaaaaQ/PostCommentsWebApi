@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Post;
-using PostComments.Core.Exceptions;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Post;
+using PostComments.BLL.Exceptions;
+using PostComments.BLL.Interfaces;
+using PostComments.BLL.Services;
 using PostComments.Core.Interfaces;
-using PostComments.Core.Services;
 using Xunit;
 
 namespace UnitTests.PostComments.Core.Services
@@ -90,8 +91,8 @@ namespace UnitTests.PostComments.Core.Services
             Post post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Title), fromId);
 
             _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId == post.FromId))).Returns(Task.CompletedTask);
-            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId != post.FromId)));//.ReturnsAsync(() => null);
-            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);//.ReturnsAsync(() => null);
+            _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId != post.FromId)));
+            _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);
 
 
             var returnedPost = await postService.CreatePostAsync(createPostDto, fromId);

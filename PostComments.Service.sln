@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostComments.Service", "PostComments.Service\PostComments.Service.csproj", "{7490A461-9752-4D9B-BC1F-55BB3ABCB70A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.Service", "PostComments.Service\PostComments.Service.csproj", "{7490A461-9752-4D9B-BC1F-55BB3ABCB70A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostComments.Core", "PostComments.BLL\PostComments.Core.csproj", "{11E3890B-5147-41FB-BAA1-F759C0DED222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.BLL", "PostComments.BLL\PostComments.BLL.csproj", "{11E3890B-5147-41FB-BAA1-F759C0DED222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostComments.Infastructure", "PostComments.DAL\PostComments.Infastructure.csproj", "{074C7669-E5C3-4079-ABC7-762CD618C7F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.DAL", "PostComments.DAL\PostComments.DAL.csproj", "{074C7669-E5C3-4079-ABC7-762CD618C7F1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BA986604-AB05-4E76-B065-8D88E7379768}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{CB3B6FAF-4823-47BB-B6C4-660C63196025}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{CB3B6FAF-4823-47BB-B6C4-660C63196025}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

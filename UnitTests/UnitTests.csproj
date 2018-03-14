@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PostComments.BLL\PostComments.Core.csproj" />
+    <ProjectReference Include="..\PostComments.BLL\PostComments.BLL.csproj" />
   </ItemGroup>
 
 </Project>

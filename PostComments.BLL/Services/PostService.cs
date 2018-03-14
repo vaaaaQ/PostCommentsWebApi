@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using PostComments.Core.Dtos;
-using PostComments.Core.Entities.Post;
-using PostComments.Core.Exceptions;
+using PostComments.BLL.Dtos;
+using PostComments.BLL.Entities.Post;
+using PostComments.BLL.Exceptions;
+using PostComments.BLL.Interfaces;
 using PostComments.Core.Interfaces;
 
-namespace PostComments.Core.Services
+namespace PostComments.BLL.Services
 {
     public class PostService : IPostService
     {

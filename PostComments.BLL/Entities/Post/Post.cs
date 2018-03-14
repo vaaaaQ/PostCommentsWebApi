@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 
-namespace PostComments.Core.Entities.Post
+namespace PostComments.BLL.Entities.Post
 {
     public class Post : BaseEntity
     {

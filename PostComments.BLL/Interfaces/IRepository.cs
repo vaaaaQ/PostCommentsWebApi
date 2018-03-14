@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PostComments.Core.Entities;
+using PostComments.BLL.Entities;
 
-namespace PostComments.Core.Interfaces
+namespace PostComments.BLL.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {

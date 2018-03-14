@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using PostComments.Core.Interfaces;
+using PostComments.BLL.Interfaces;
 
-namespace PostComments.Core.Specifications
+namespace PostComments.BLL.Specifications
 {
     public class BaseSpecification<T> : ISpecification<T>
     {
