@@ -1,4 +1,4 @@
-﻿namespace UnitTests.PostComments.Core.Services
+﻿namespace PostComments.Core.Dtos
 {
     public class UpdateCommentDto
     {

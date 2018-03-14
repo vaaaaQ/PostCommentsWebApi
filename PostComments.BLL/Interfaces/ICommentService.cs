@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using PostComments.Core.Dtos;
 using PostComments.Core.Entities.Comment;
-using UnitTests.PostComments.Core.Services;
 
 namespace PostComments.Core.Interfaces
 {

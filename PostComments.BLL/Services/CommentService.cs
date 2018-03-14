@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using PostComments.Core.Dtos;
 using PostComments.Core.Entities.Comment;
 using PostComments.Core.Entities.Post;
 using PostComments.Core.Exceptions;
 using PostComments.Core.Interfaces;
 using PostComments.Core.Specifications;
 
-namespace UnitTests.PostComments.Core.Services
+namespace PostComments.Core.Services
 {
     public class CommentService : ICommentService
     {
@@ -17,7 +18,7 @@ namespace UnitTests.PostComments.Core.Services
 
         public CommentService(IAsyncRepository<Comment> commentRepository, IAsyncRepository<Post> postRepository)
         {
-            this._commentRepository = commentRepository;
+            _commentRepository = commentRepository;
             _postRepository = postRepository;
         }
 
@@ -34,7 +35,7 @@ namespace UnitTests.PostComments.Core.Services
             Guard.Against.PostNotExists(post, postId);
 
             //create post based on commentDto
-            Comment comment = new Comment(fromId, postId, new Content(commentDto.Text));
+            var comment = new Comment(fromId, postId, new Content(commentDto.Text));
             await _commentRepository.AddAsync(comment);
             return await _commentRepository.GetByIdAsync(comment.Id);
         }

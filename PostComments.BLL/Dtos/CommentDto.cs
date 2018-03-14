@@ -1,4 +1,4 @@
-﻿namespace PostComments.Core.Interfaces
+﻿namespace PostComments.Core.Dtos
 {
     public class CreateCommentDto
     {

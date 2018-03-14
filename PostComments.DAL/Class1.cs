@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PostComments.DAL
+﻿namespace PostComments.Infastructure
 {
     public class Class1
     {

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using PostComments.Core.Dtos;
 using PostComments.Core.Entities.Post;
 using PostComments.Core.Exceptions;
 using PostComments.Core.Interfaces;

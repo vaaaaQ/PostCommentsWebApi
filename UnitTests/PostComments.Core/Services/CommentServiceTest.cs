@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using PostComments.Core.Dtos;
 using PostComments.Core.Entities.Comment;
 using PostComments.Core.Entities.Post;
 using PostComments.Core.Exceptions;

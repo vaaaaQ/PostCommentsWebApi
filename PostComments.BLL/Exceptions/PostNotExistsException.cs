@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PostComments.Core.Services
+namespace PostComments.Core.Exceptions
 {
     [Serializable]
     public class PostNotExistsException : ArgumentNullException
     {
-        public PostNotExistsException(Guid id): this($"Post with id: {id} doesn't exist")
+        public PostNotExistsException(Guid id) : this($"Post with id: {id} doesn't exist")
         {
         }
 

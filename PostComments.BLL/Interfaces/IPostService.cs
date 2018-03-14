@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PostComments.Core.Dtos;
 using PostComments.Core.Entities.Post;
 
-namespace PostComments.Core.Services
+namespace PostComments.Core.Interfaces
 {
     public interface IPostService
     {

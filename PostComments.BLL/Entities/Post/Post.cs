@@ -10,7 +10,7 @@ namespace PostComments.Core.Entities.Post
         public Content Content { get; }
         public Title Title { get; }
         public DateTimeOffset CreatedOn { get; } = DateTimeOffset.Now;
-        public Guid FromId { get; } 
+        public Guid FromId { get; }
 
         public IReadOnlyList<Comment.Comment> Comments => _comments;
 
