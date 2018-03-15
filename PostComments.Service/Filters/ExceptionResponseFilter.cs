@@ -19,6 +19,7 @@ namespace PostComments.Service.Filters
             var exception = context.Exception;
             var baseErrorResponse = new BaseErrorResponse(exception);
             context.Result = new ObjectResult(baseErrorResponse);
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
             if (exception is BaseNotExistsException)
                 context.HttpContext.Response.StatusCode = (int) HttpStatusCode.NotFound;

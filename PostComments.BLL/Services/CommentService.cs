@@ -56,7 +56,9 @@ namespace PostComments.BLL.Services
         {
             Guard.Against.GuidEmpty(commentId, nameof(commentId));
 
-            return await _commentRepository.GetByIdAsync(commentId);
+            var comment = await _commentRepository.GetByIdAsync(commentId); 
+            Guard.Against.CommentNotExists(comment, commentId);
+            return comment;
         }
 
         public async Task<Comment> UpdateCommentAsync(UpdateCommentDto updateCommentDto, Guid commentId)

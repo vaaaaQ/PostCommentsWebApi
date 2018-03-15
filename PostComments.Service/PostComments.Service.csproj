@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\PostComments.Service.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PostComments.BLL\PostComments.BLL.csproj" />
+    <ProjectReference Include="..\PostComments.DAL\PostComments.DAL.csproj" />
   </ItemGroup>
 
 </Project>
