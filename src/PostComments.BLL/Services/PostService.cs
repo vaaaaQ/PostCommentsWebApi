@@ -19,6 +19,13 @@ namespace PostComments.BLL.Services
             _postRepository = postRepository;
         }
 
+
+        /// <summary>
+        /// Creates new post
+        /// </summary>
+        /// <param name="createPostDto">post data</param>
+        /// <param name="from">user id</param>
+        /// <returns>Created post</returns>
         public async Task<Post> CreatePostAsync(CreatePostDto createPostDto, Guid from)
         {
             Guard.Against.Null(createPostDto, nameof(createPostDto));
@@ -31,11 +38,20 @@ namespace PostComments.BLL.Services
             return await _postRepository.GetByIdAsync(post.Id);
         }
 
+        /// <summary>
+        /// Returns all posts
+        /// </summary>
+        /// <returns>all posts</returns>
         public async Task<IEnumerable<Post>> GetPostsAsync()
         {
             return await _postRepository.ListAllAsync();
         }
 
+        /// <summary>
+        /// Returns posts
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Created post</returns>
         public async Task<Post> GetPostByIdAsync(Guid id)
         {
             Guard.Against.GuidEmpty(id, nameof(id));
@@ -46,24 +62,35 @@ namespace PostComments.BLL.Services
             return post;
         }
 
-        public async Task UpdatePostAsync(Guid initialPostId, UpdatePostDto dto)
+        /// <summary>
+        /// Update post
+        /// </summary>
+        /// <param name="initialPostId">post id</param>
+        /// <param name="postData">post data</param>
+        /// <returns></returns>
+        public async Task UpdatePostAsync(Guid initialPostId, UpdatePostDto postData)
         {
             Guard.Against.GuidEmpty(initialPostId, nameof(initialPostId));
-            Guard.Against.Null(dto, nameof(dto));
+            Guard.Against.Null(postData, nameof(postData));
 
-            if (string.IsNullOrEmpty(dto.Text) && string.IsNullOrEmpty(dto.Title))
+            if (string.IsNullOrEmpty(postData.Text) && string.IsNullOrEmpty(postData.Title))
                 throw new ArgumentNullException("At least 1 value shouldn't be empty");
 
             var post = await _postRepository.GetByIdAsync(initialPostId);
 
             Guard.Against.PostNotExists(post, initialPostId);
 
-            post.Content.Text = dto.Text;
-            post.Title.Text = dto.Title;
+            post.Content.Text = postData.Text;
+            post.Title.Text = postData.Title;
 
             await _postRepository.UpdateAsync(post);
         }
 
+        /// <summary>
+        /// Delete post
+        /// </summary>
+        /// <param name="id">post id</param>
+        /// <returns></returns>
         public async Task DeletePostByIdAsync(Guid id)
         {
             Guard.Against.GuidEmpty(id, nameof(id));

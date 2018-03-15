@@ -22,6 +22,13 @@ namespace PostComments.BLL.Services
             _postRepository = postRepository;
         }
 
+        /// <summary>
+        /// Create new comment
+        /// </summary>
+        /// <param name="commentDto">comment data</param>
+        /// <param name="fromId">user id (who commented)</param>
+        /// <param name="postId">post id</param>
+        /// <returns></returns>
         public async Task<Comment> CreateCommentAsync(CreateCommentDto commentDto, Guid fromId, Guid postId)
         {
             Guard.Against.Null(commentDto, nameof(commentDto));
@@ -40,6 +47,11 @@ namespace PostComments.BLL.Services
             return await _commentRepository.GetByIdAsync(comment.Id);
         }
 
+        /// <summary>
+        /// Returns comment for paricular post
+        /// </summary>
+        /// <param name="postId">post id</param>
+        /// <returns>comments</returns>
         public async Task<IEnumerable<Comment>> GetCommentsByPostId(Guid postId)
         {
             Guard.Against.GuidEmpty(postId, nameof(postId));
@@ -52,6 +64,12 @@ namespace PostComments.BLL.Services
                 new BaseSpecification<Comment>(comment => comment.PostId == postId));
         }
 
+
+        /// <summary>
+        /// Returns comment data
+        /// </summary>
+        /// <param name="commentId">comment id</param>
+        /// <returns>comment</returns>
         public async Task<Comment> GetCommentById(Guid commentId)
         {
             Guard.Against.GuidEmpty(commentId, nameof(commentId));
@@ -61,6 +79,12 @@ namespace PostComments.BLL.Services
             return comment;
         }
 
+        /// <summary>
+        /// Updates comment data
+        /// </summary>
+        /// <param name="updateCommentDto">new comment data</param>
+        /// <param name="commentId">comment id</param>
+        /// <returns>updated comment</returns>
         public async Task<Comment> UpdateCommentAsync(UpdateCommentDto updateCommentDto, Guid commentId)
         {
             Guard.Against.Null(updateCommentDto, nameof(updateCommentDto));
@@ -77,6 +101,11 @@ namespace PostComments.BLL.Services
             return await _commentRepository.GetByIdAsync(commentId);
         }
 
+        /// <summary>
+        /// Delete comment
+        /// </summary>
+        /// <param name="commentId">comment id</param>
+        /// <returns></returns>
         public async Task DeleteCommentAsync(Guid commentId)
         {
             Guard.Against.GuidEmpty(commentId, nameof(commentId));
