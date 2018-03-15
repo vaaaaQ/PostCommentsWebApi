@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.DAL", "PostCom
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BA986604-AB05-4E76-B065-8D88E7379768}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "..\tests\UnitTests\UnitTests.csproj", "{14A97BD9-5644-4727-957B-9CB70A7635D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.UnitTests", "..\tests\UnitTests\PostComments.UnitTests.csproj", "{14A97BD9-5644-4727-957B-9CB70A7635D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostComments.IntegrationTests", "..\tests\PostComments.IntegrationTests\PostComments.IntegrationTests.csproj", "{F9456412-1CBA-4B2E-82BE-F67A3325DEC2}"
 EndProject
