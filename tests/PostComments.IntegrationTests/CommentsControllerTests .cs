@@ -10,7 +10,6 @@ using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Entities.Post;
 using PostComments.Service;
 using Xunit;
-using PostComments.BLL.Extensions;
 
 namespace PostComments.IntegrationTests
 {

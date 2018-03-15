@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PostComments.BLL.Entities;
-using PostComments.BLL.Interfaces;
 
 namespace PostComments.BLL.Interfaces
 {

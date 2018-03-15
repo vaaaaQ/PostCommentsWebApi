@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PostComments.BLL;
 using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Comment;
-using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Interfaces;
-using PostComments.Core.Interfaces;
 
 namespace PostComments.Service.Controllers
 {
@@ -110,7 +106,6 @@ namespace PostComments.Service.Controllers
         /// <response code="400">If the posted item is null or required fields are empty</response>   
         /// <response code="404">If the comment doesn't exist</response>   
         [HttpPut("{id}")]
-        [Route("api/v1/[controller]/{id}")]
         public async Task<Comment> Put(Guid id, [FromBody]UpdateCommentDto comment)
         {
             return await _commentService.UpdateCommentAsync(comment, id);
@@ -129,7 +124,6 @@ namespace PostComments.Service.Controllers
         /// <response code="204">Returns if deleted</response>
         /// <response code="404">If post doesn't exist</response>  
         [HttpDelete("{id}")]
-        [Route("api/v1/[controller]/{id}")]
         public async Task Delete(Guid id)
         {
             HttpContext.Response.StatusCode = (int) HttpStatusCode.NoContent;
