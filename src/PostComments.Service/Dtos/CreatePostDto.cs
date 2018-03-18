@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace PostComments.BLL.Dtos
+namespace PostComments.Service.Dtos
 {
     public class CreatePostDto
     {

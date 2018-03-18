@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Exceptions;
 using PostComments.BLL.Interfaces;
 using PostComments.BLL.Specifications;
+using PostComments.BLL.ViewModels;
 
 namespace PostComments.BLL.Services
 {
@@ -25,24 +25,22 @@ namespace PostComments.BLL.Services
         /// <summary>
         /// Create new comment
         /// </summary>
-        /// <param name="commentDto">comment data</param>
-        /// <param name="fromId">user id (who commented)</param>
-        /// <param name="postId">post id</param>
+        /// <param name="viewModel">comment data</param>
         /// <returns></returns>
-        public async Task<Comment> CreateCommentAsync(CreateCommentDto commentDto, Guid fromId, Guid postId)
+        public async Task<Comment> CreateCommentAsync(CreateCommentViewModel viewModel)
         {
-            Guard.Against.Null(commentDto, nameof(commentDto));
-            Guard.Against.GuidEmpty(fromId, nameof(fromId));
-            Guard.Against.GuidEmpty(postId, nameof(postId));
-            Guard.Against.NullOrEmpty(commentDto.Text, nameof(commentDto.Text));
+            Guard.Against.Null(viewModel, nameof(viewModel));
+            Guard.Against.GuidEmpty(viewModel.FromId, nameof(viewModel.FromId));
+            Guard.Against.GuidEmpty(viewModel.PostId, nameof(viewModel.PostId));
+            Guard.Against.NullOrEmpty(viewModel.Text, nameof(viewModel.Text));
 
 
             //check post exists
-            var post = await _postRepository.GetByIdAsync(postId);
-            Guard.Against.PostNotExists(post, postId);
+            var post = await _postRepository.GetByIdAsync(viewModel.PostId);
+            Guard.Against.PostNotExists(post, viewModel.PostId);
 
             //create post based on commentDto
-            var comment = new Comment(fromId, postId, new Content(commentDto.Text));
+            var comment = new Comment(viewModel.FromId, viewModel.PostId, new Content(viewModel.Text));
             await _commentRepository.AddAsync(comment);
             return await _commentRepository.GetByIdAsync(comment.Id);
         }
@@ -82,23 +80,22 @@ namespace PostComments.BLL.Services
         /// <summary>
         /// Updates comment data
         /// </summary>
-        /// <param name="updateCommentDto">new comment data</param>
-        /// <param name="commentId">comment id</param>
+        /// <param name="viewModel">new comment data</param>
         /// <returns>updated comment</returns>
-        public async Task<Comment> UpdateCommentAsync(UpdateCommentDto updateCommentDto, Guid commentId)
+        public async Task<Comment> UpdateCommentAsync(UpdateCommentViewModel viewModel)
         {
-            Guard.Against.Null(updateCommentDto, nameof(updateCommentDto));
-            Guard.Against.GuidEmpty(commentId, nameof(commentId));
+            Guard.Against.Null(viewModel, nameof(viewModel));
+            Guard.Against.GuidEmpty(viewModel.CommentId, nameof(viewModel.CommentId));
 
             //Check Comment exists
-            var comment = await _commentRepository.GetByIdAsync(commentId);
-            Guard.Against.CommentNotExists(comment, commentId);
+            var comment = await _commentRepository.GetByIdAsync(viewModel.CommentId);
+            Guard.Against.CommentNotExists(comment, viewModel.CommentId);
 
-            comment.Content.Text = updateCommentDto.Text;
+            comment.Content.Text = viewModel.Text;
 
             await _commentRepository.UpdateAsync(comment);
 
-            return await _commentRepository.GetByIdAsync(commentId);
+            return await _commentRepository.GetByIdAsync(viewModel.CommentId);
         }
 
         /// <summary>

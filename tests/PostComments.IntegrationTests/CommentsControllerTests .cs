@@ -5,10 +5,10 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Entities.Post;
 using PostComments.Service;
+using PostComments.Service.Dtos;
 using Xunit;
 
 namespace PostComments.IntegrationTests

@@ -4,9 +4,10 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PostComments.BLL;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Post;
-using PostComments.Core.Interfaces;
+using PostComments.BLL.Interfaces;
+using PostComments.BLL.ViewModels;
+using PostComments.Service.Dtos;
 
 namespace PostComments.Service.Controllers
 {
@@ -81,32 +82,41 @@ namespace PostComments.Service.Controllers
         {
             Guid userId = Guid.NewGuid(); // TODO change to get from authentications claims 
 
-            HttpContext.Response.StatusCode = (int) HttpStatusCode.Created;
-            return await _postService.CreatePostAsync(post, userId);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
+            var createPostViewModel = new CreatePostViewModel() { FromId = userId, Text = post.Text, Title = post.Title };
+            return await _postService.CreatePostAsync(createPostViewModel);
         }
 
-        /// <summary>
-        /// Update post
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     PUT /api/v1/posts/{id}
-        ///     {
-        ///        "title": "Great Solutions",
-        ///        "text": "You can find here"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="post">post data</param>
+        ///  <summary>
+        ///  Update post
+        ///  </summary>
+        ///  <remarks>
+        ///  Sample request:
+        /// 
+        ///      PUT /api/v1/posts/{id}
+        ///      {
+        ///         "title": "Great Solutions",
+        ///         "text": "You can find here"
+        ///      }
+        /// 
+        ///  </remarks>
+        ///  <param name="updatePostDto">post data</param>
+        /// <param name="id">post id</param>
         /// <returns>A newly-created post</returns>
-        /// <response code="200">Returns the updated post</response>
-        /// <response code="400">If the posted item is null or required fields are empty</response>   
-        /// <response code="404">If post doesn't exist</response>   
+        ///  <response code="200">Returns the updated post</response>
+        ///  <response code="400">If the posted item is null or required fields are empty</response>   
+        ///  <response code="404">If post doesn't exist</response>   
         [HttpPut("{id}")]
         public async Task Put(Guid id, [FromBody]UpdatePostDto updatePostDto)
         {
-            await _postService.UpdatePostAsync(id, updatePostDto);
+            var updatePostViewModel = new UpdatePostViewModel()
+            {
+                InitialPostId = id,
+                Text = updatePostDto.Text,
+                Title = updatePostDto.Title
+            };
+
+            await _postService.UpdatePostAsync(updatePostViewModel);
         }
 
         /// <summary>
@@ -125,7 +135,7 @@ namespace PostComments.Service.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(Guid id)
         {
-            HttpContext.Response.StatusCode = (int) HttpStatusCode.NoContent;
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.NoContent;
             await _postService.DeletePostByIdAsync(id);
         }
     }

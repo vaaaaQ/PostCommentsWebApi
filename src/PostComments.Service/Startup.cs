@@ -8,7 +8,6 @@ using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Interfaces;
 using PostComments.BLL.Services;
-using PostComments.Core.Interfaces;
 using PostComments.DAL;
 using PostComments.Service.Filters;
 using Swashbuckle.AspNetCore.Swagger;

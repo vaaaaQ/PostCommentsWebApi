@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Exceptions;
 using PostComments.BLL.Interfaces;
-using PostComments.Core.Interfaces;
+using PostComments.BLL.ViewModels;
 
 namespace PostComments.BLL.Services
 {
@@ -23,17 +22,16 @@ namespace PostComments.BLL.Services
         /// <summary>
         /// Creates new post
         /// </summary>
-        /// <param name="createPostDto">post data</param>
-        /// <param name="from">user id</param>
+        /// <param name="viewModel">post data</param>
         /// <returns>Created post</returns>
-        public async Task<Post> CreatePostAsync(CreatePostDto createPostDto, Guid from)
+        public async Task<Post> CreatePostAsync(CreatePostViewModel viewModel)
         {
-            Guard.Against.Null(createPostDto, nameof(createPostDto));
-            Guard.Against.NullOrEmpty(createPostDto.Text, nameof(createPostDto.Text));
-            Guard.Against.NullOrEmpty(createPostDto.Title, nameof(createPostDto.Title));
-            Guard.Against.GuidEmpty(from, nameof(from));
+            Guard.Against.Null(viewModel, nameof(viewModel));
+            Guard.Against.NullOrEmpty(viewModel.Text, nameof(viewModel.Text));
+            Guard.Against.NullOrEmpty(viewModel.Title, nameof(viewModel.Title));
+            Guard.Against.GuidEmpty(viewModel.FromId, nameof(viewModel.FromId));
 
-            var post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Text), from);
+            var post = new Post(new Content(viewModel.Text), new Title(viewModel.Text), viewModel.FromId);
             await _postRepository.AddAsync(post);
             return await _postRepository.GetByIdAsync(post.Id);
         }
@@ -65,23 +63,22 @@ namespace PostComments.BLL.Services
         /// <summary>
         /// Update post
         /// </summary>
-        /// <param name="initialPostId">post id</param>
-        /// <param name="postData">post data</param>
+        /// <param name="viewModel">post data</param>
         /// <returns></returns>
-        public async Task UpdatePostAsync(Guid initialPostId, UpdatePostDto postData)
+        public async Task UpdatePostAsync(UpdatePostViewModel viewModel)
         {
-            Guard.Against.GuidEmpty(initialPostId, nameof(initialPostId));
-            Guard.Against.Null(postData, nameof(postData));
+            Guard.Against.GuidEmpty(viewModel.InitialPostId, nameof(viewModel.InitialPostId));
+            Guard.Against.Null(viewModel, nameof(viewModel));
 
-            if (string.IsNullOrEmpty(postData.Text) && string.IsNullOrEmpty(postData.Title))
+            if (string.IsNullOrEmpty(viewModel.Text) && string.IsNullOrEmpty(viewModel.Title))
                 throw new ArgumentNullException("At least 1 value shouldn't be empty");
 
-            var post = await _postRepository.GetByIdAsync(initialPostId);
+            var post = await _postRepository.GetByIdAsync(viewModel.InitialPostId);
 
-            Guard.Against.PostNotExists(post, initialPostId);
+            Guard.Against.PostNotExists(post, viewModel.InitialPostId);
 
-            post.Content.Text = postData.Text;
-            post.Title.Text = postData.Title;
+            post.Content.Text = viewModel.Text;
+            post.Title.Text = viewModel.Title;
 
             await _postRepository.UpdateAsync(post);
         }

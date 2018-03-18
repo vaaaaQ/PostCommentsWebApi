@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Post;
+using PostComments.BLL.ViewModels;
 
-namespace PostComments.Core.Interfaces
+namespace PostComments.BLL.Interfaces
 {
     public interface IPostService
     {
-        Task<Post> CreatePostAsync(CreatePostDto createPostDto, Guid from);
+        Task<Post> CreatePostAsync(CreatePostViewModel viewModel);
         Task DeletePostByIdAsync(Guid id);
         Task<Post> GetPostByIdAsync(Guid id);
         Task<IEnumerable<Post>> GetPostsAsync();
-        Task UpdatePostAsync(Guid initialPostId, UpdatePostDto dto);
+        Task UpdatePostAsync(UpdatePostViewModel viewModel);
     }
 }

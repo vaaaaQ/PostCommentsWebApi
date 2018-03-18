@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Exceptions;
 using PostComments.BLL.Interfaces;
 using PostComments.BLL.Services;
+using PostComments.BLL.ViewModels;
 using Xunit;
 
-namespace UnitTests.PostComments.Core.Services
+namespace PostComments.UnitTests.PostComments.Core.Services
 {
     public class CommentServiceTest
     {
@@ -36,7 +36,7 @@ namespace UnitTests.PostComments.Core.Services
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
             //DTO is null
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await commentService.CreateCommentAsync(null, Guid.Empty, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await commentService.CreateCommentAsync(null));
         }
 
         [Fact]
@@ -44,12 +44,14 @@ namespace UnitTests.PostComments.Core.Services
         {
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            CreateCommentDto createCommentDto = new CreateCommentDto()
+            CreateCommentViewModel createCommentViewModel = new CreateCommentViewModel()
             {
-                Text = COMMENT_TEXT_CONTENT
+                Text = COMMENT_TEXT_CONTENT,
+                FromId = Guid.Empty,
+                PostId = Guid.NewGuid()
             };
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentDto, Guid.Empty, Guid.NewGuid()));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentViewModel));
         }
 
         [Fact]
@@ -57,12 +59,14 @@ namespace UnitTests.PostComments.Core.Services
         {
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            CreateCommentDto createCommentDto = new CreateCommentDto()
+            CreateCommentViewModel createCommentViewModel = new CreateCommentViewModel()
             {
-                Text = COMMENT_TEXT_CONTENT
+                Text = COMMENT_TEXT_CONTENT,
+                FromId = Guid.NewGuid(),
+                PostId = Guid.Empty
             };
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentDto, Guid.NewGuid(), Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentViewModel));
         }
 
         [Fact]
@@ -70,12 +74,14 @@ namespace UnitTests.PostComments.Core.Services
         {
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            CreateCommentDto createCommentDto = new CreateCommentDto
+            CreateCommentViewModel createCommentViewModel = new CreateCommentViewModel()
             {
-                Text = string.Empty
+                Text = COMMENT_TEXT_CONTENT,
+                FromId = Guid.NewGuid(),
+                PostId = Guid.Empty
             };
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentDto, Guid.NewGuid(), Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.CreateCommentAsync(createCommentViewModel));
         }
 
         [Fact]
@@ -84,37 +90,41 @@ namespace UnitTests.PostComments.Core.Services
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(() => null);
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            CreateCommentDto createCommentDto = new CreateCommentDto
+            CreateCommentViewModel createCommentViewModel = new CreateCommentViewModel()
             {
-                Text = COMMENT_TEXT_CONTENT
+                Text = COMMENT_TEXT_CONTENT,
+                FromId = Guid.NewGuid(),
+                PostId = Guid.NewGuid()
             };
 
-            await Assert.ThrowsAsync<PostNotExistsException>(async () => await commentService.CreateCommentAsync(createCommentDto, Guid.NewGuid(), Guid.NewGuid()));
+            await Assert.ThrowsAsync<PostNotExistsException>(async () => await commentService.CreateCommentAsync(createCommentViewModel));
         }
 
         [Fact]
         public async void Create_Post_Returns_Right_Comment()
         {
-            CreateCommentDto createCommentDto = new CreateCommentDto
+            CreateCommentViewModel createCommentViewModel = new CreateCommentViewModel()
             {
-                Text = COMMENT_TEXT_CONTENT + Guid.NewGuid().ToString()
+                Text = COMMENT_TEXT_CONTENT + Guid.NewGuid().ToString(),
+                FromId = Guid.NewGuid(),
+                PostId = Guid.NewGuid()
             };
 
             Post post = new Post(new Content("Post text content"), new Title("Post title"), Guid.NewGuid());
 
             Guid fromId = Guid.NewGuid();
 
-            Comment newComment = new Comment(fromId, post.Id, new Content(COMMENT_TEXT_CONTENT));
+            Comment newComment = new Comment(createCommentViewModel.FromId, post.Id, new Content(COMMENT_TEXT_CONTENT));
 
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);
             _mockCommentsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(newComment);
             _mockCommentsRepository.Setup(repo =>
-                    repo.AddAsync(It.Is<Comment>(comment => comment.Content.Text == createCommentDto.Text)))
+                    repo.AddAsync(It.Is<Comment>(comment => comment.Content.Text == createCommentViewModel.Text)))
                 .Returns(Task.CompletedTask);
 
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            var createdComment = await commentService.CreateCommentAsync(createCommentDto, fromId, post.Id);
+            var createdComment = await commentService.CreateCommentAsync(createCommentViewModel);
 
             Assert.Equal(createdComment.Id, newComment.Id);
             Assert.Equal(createdComment.FromId, newComment.FromId);
@@ -216,8 +226,8 @@ namespace UnitTests.PostComments.Core.Services
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
             //DTO is null
-            UpdateCommentDto updateCommentDto = null;
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await commentService.UpdateCommentAsync(updateCommentDto, Guid.NewGuid()));
+            UpdateCommentViewModel updateCommentViewModel = null;
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await commentService.UpdateCommentAsync(updateCommentViewModel));
         }
 
 
@@ -226,21 +236,21 @@ namespace UnitTests.PostComments.Core.Services
         {
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            UpdateCommentDto updateCommentDto = new UpdateCommentDto();
-            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.UpdateCommentAsync(updateCommentDto, Guid.Empty));
+            UpdateCommentViewModel updateCommentViewModel = new UpdateCommentViewModel();
+            await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.UpdateCommentAsync(updateCommentViewModel));
         }
         
 
         [Fact]
         public async void Update_Comment_By_Id_Create_Post_Returns_Right_Comment()
         {
-            UpdateCommentDto updateCommentDto = new UpdateCommentDto()
+            UpdateCommentViewModel updateCommentViewModel = new UpdateCommentViewModel()
             {
                 Text = "New comment text content"
             };
             Post post = new Post(new Content("Post text content"), new Title("Post title"), Guid.NewGuid());
 
-            Comment shouldBeComment = new Comment(Guid.NewGuid(), post.Id, new Content(updateCommentDto.Text));
+            Comment shouldBeComment = new Comment(Guid.NewGuid(), post.Id, new Content(updateCommentViewModel.Text));
 
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);
             _mockCommentsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(shouldBeComment);
@@ -249,8 +259,8 @@ namespace UnitTests.PostComments.Core.Services
                 .Returns(Task.CompletedTask);
 
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
-
-            var updatedComment = await commentService.UpdateCommentAsync(updateCommentDto, shouldBeComment.Id);
+            updateCommentViewModel.CommentId = shouldBeComment.Id;
+            var updatedComment = await commentService.UpdateCommentAsync(updateCommentViewModel);
 
             Assert.Equal(updatedComment.Content.Text, shouldBeComment.Content.Text);
             Assert.Equal(updatedComment.Id, shouldBeComment.Id);
@@ -266,7 +276,7 @@ namespace UnitTests.PostComments.Core.Services
         {
             ICommentService commentService = new CommentService(_mockCommentsRepository.Object, _mockPostRepository.Object);
 
-            UpdateCommentDto updateCommentDto = new UpdateCommentDto();
+            UpdateCommentViewModel updateCommentViewModel = new UpdateCommentViewModel();
             await Assert.ThrowsAsync<ArgumentException>(async () => await commentService.DeleteCommentAsync(Guid.Empty));
         }
 

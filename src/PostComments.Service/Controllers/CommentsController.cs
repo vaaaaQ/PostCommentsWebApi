@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Comment;
 using PostComments.BLL.Interfaces;
+using PostComments.BLL.ViewModels;
+using PostComments.Service.Dtos;
 
 namespace PostComments.Service.Controllers
 {
@@ -84,7 +85,9 @@ namespace PostComments.Service.Controllers
             Guid userId = Guid.NewGuid(); // TODO change to get user_id from authentication claims
 
             HttpContext.Response.StatusCode = (int) HttpStatusCode.Created;
-            return await _commentService.CreateCommentAsync(comment, userId, postId);
+
+            var createCommentViewModel = new CreateCommentViewModel(){FromId = userId, PostId = postId, Text = comment.Text};
+            return await _commentService.CreateCommentAsync(createCommentViewModel);
         }
 
         /// <summary>
@@ -108,7 +111,8 @@ namespace PostComments.Service.Controllers
         [HttpPut("{id}")]
         public async Task<Comment> Put(Guid id, [FromBody]UpdateCommentDto comment)
         {
-            return await _commentService.UpdateCommentAsync(comment, id);
+            var updateCommentViewModel = new UpdateCommentViewModel(){CommentId = id, Text = comment.Text}; 
+            return await _commentService.UpdateCommentAsync(updateCommentViewModel);
         }
 
         /// <summary>

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
-using PostComments.BLL.Dtos;
 using PostComments.BLL.Entities.Post;
 using PostComments.BLL.Exceptions;
 using PostComments.BLL.Interfaces;
 using PostComments.BLL.Services;
-using PostComments.Core.Interfaces;
+using PostComments.BLL.ViewModels;
 using Xunit;
 
-namespace UnitTests.PostComments.Core.Services
+namespace PostComments.UnitTests.PostComments.Core.Services
 {
     public class PostServiceTest
     {
@@ -30,7 +29,7 @@ namespace UnitTests.PostComments.Core.Services
             IPostService postService = new PostService(_mockPostRepository.Object);
 
             //DTO is null
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(null, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(null));
         }
 
         [Fact]
@@ -38,10 +37,10 @@ namespace UnitTests.PostComments.Core.Services
         {
             IPostService postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDto createPostDto = new CreatePostDto();
+            CreatePostViewModel createPostViewModel = new CreatePostViewModel();
 
             //Text is invalid
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostDto, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostViewModel));
         }
 
         [Fact]
@@ -49,14 +48,14 @@ namespace UnitTests.PostComments.Core.Services
         {
             IPostService postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDto createPostDto = new CreatePostDto
+            CreatePostViewModel createPostViewModel = new CreatePostViewModel
             {
                 Text = PostText,
                 Title = null
             };
 
             //Title is invalid
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostDto, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.CreatePostAsync(createPostViewModel));
         }
 
         [Fact]
@@ -64,14 +63,14 @@ namespace UnitTests.PostComments.Core.Services
         {
             IPostService postService = new PostService(_mockPostRepository.Object);
 
-            CreatePostDto createPostDto = new CreatePostDto
+            CreatePostViewModel createPostViewModel = new CreatePostViewModel
             {
                 Text = PostText,
                 Title = PostTitle
             };
 
             //From is invalid
-            await Assert.ThrowsAsync<ArgumentException>(async () => await postService.CreatePostAsync(createPostDto, Guid.Empty));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await postService.CreatePostAsync(createPostViewModel));
         }
 
         [Fact]
@@ -80,27 +79,26 @@ namespace UnitTests.PostComments.Core.Services
             IPostService postService = new PostService(_mockPostRepository.Object);
 
 
-            var fromId = Guid.NewGuid();
-
-            CreatePostDto createPostDto = new CreatePostDto
+            CreatePostViewModel createPostViewModel = new CreatePostViewModel
             {
                 Text = PostText,
-                Title = PostTitle
+                Title = PostTitle,
+                FromId = Guid.NewGuid()
             };
 
-            Post post = new Post(new Content(createPostDto.Text), new Title(createPostDto.Title), fromId);
+            Post post = new Post(new Content(createPostViewModel.Text), new Title(createPostViewModel.Title), createPostViewModel.FromId);
 
             _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId == post.FromId))).Returns(Task.CompletedTask);
             _mockPostRepository.Setup(repo => repo.AddAsync(It.Is<Post>(p => p.FromId != post.FromId)));
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(post);
 
 
-            var returnedPost = await postService.CreatePostAsync(createPostDto, fromId);
+            var returnedPost = await postService.CreatePostAsync(createPostViewModel);
 
             Assert.NotNull(returnedPost);
-            Assert.Equal(post.Title.Text, createPostDto.Title);
-            Assert.Equal(post.Content.Text, createPostDto.Text);
-            Assert.Equal(post.FromId, fromId);
+            Assert.Equal(post.Title.Text, createPostViewModel.Title);
+            Assert.Equal(post.Content.Text, createPostViewModel.Text);
+            Assert.Equal(post.FromId, createPostViewModel.FromId);
         }
 
         [Fact]
@@ -193,18 +191,9 @@ namespace UnitTests.PostComments.Core.Services
         {
             IPostService postService = new PostService(_mockPostRepository.Object);
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await postService.UpdatePostAsync(Guid.Empty, null));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await postService.UpdatePostAsync(new UpdatePostViewModel()));
         }
 
-        [Fact]
-        public async void Update_Post_By_Id_Throws_Given_Null_dto()
-        {
-            IPostService postService = new PostService(_mockPostRepository.Object);
-
-            var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
-
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.UpdatePostAsync(initialPost.Id, null));
-        }
 
         [Fact]
         public async void Update_Post_By_Id_Throws_Given_Dto_Values_Are_Empty()
@@ -213,13 +202,14 @@ namespace UnitTests.PostComments.Core.Services
 
             var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
-            UpdatePostDto dto = new UpdatePostDto
+            UpdatePostViewModel viewModel = new UpdatePostViewModel
             {
                 Text = "",
-                Title = null
+                Title = null,
+                InitialPostId = initialPost.Id
             };
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.UpdatePostAsync(initialPost.Id, dto));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await postService.UpdatePostAsync(viewModel));
         }
 
         [Fact]
@@ -229,19 +219,19 @@ namespace UnitTests.PostComments.Core.Services
 
             var initialPost = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
 
-            UpdatePostDto dto = new UpdatePostDto
+            UpdatePostViewModel viewModel = new UpdatePostViewModel
             {
                 Text = "New Text",
                 Title = "New Title"
             };
 
             Post post = new Post(new Content(PostText), new Title(PostTitle), Guid.NewGuid());
-
+            viewModel.InitialPostId = initialPost.Id;
             _mockPostRepository.Setup(repo => repo.GetByIdAsync(It.Is<Guid>(id => id == post.Id))).ReturnsAsync(post);
             _mockPostRepository.Setup(repo => repo.UpdateAsync(post)).Returns(Task.CompletedTask);
 
 
-            await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.UpdatePostAsync(initialPost.Id, dto));
+            await Assert.ThrowsAsync<PostNotExistsException>(async () => await postService.UpdatePostAsync(viewModel));
         }
 
         [Fact]
