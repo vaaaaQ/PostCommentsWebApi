@@ -31,7 +31,10 @@ namespace PostComments.Service
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
 
-            services.AddMvc(options => { options.Filters.Add(typeof(ExceptionResponseFilter)); });
+            services.AddMvc(options => { 
+                options.Filters.Add(typeof(ExceptionResponseFilter));
+                options.Filters.Add<ModelValidationFilterAttribute>();
+            });
 
             services.AddSwaggerGen(c =>
             {
